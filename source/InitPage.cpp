@@ -7,30 +7,45 @@
 
 using std::cout;
 
+//공고 목록 출력 함수 - 커서 위치 입력받아서 색 변경 적용
+void InitPage::ShowNotice(unsigned short pos)
+{
+    if(pos!=1) cout<<"\x1b[30m○  공고 목록 \n";
+    else cout<<"●  공고 목록 \n";
+}
+//커서 위치에 따른 목록 출력
 void InitPage::ListforPos(unsigned short pos)
 {
+    cout<<"\x1b[1;96m ##   ##  ##  ####    ##   ## \n"
+          " ##   ##  ##   ##     ###  ## \n"
+          " ##   ##  ##   ##     #### ## \n"
+          " #######       ##     ## #### \n"
+          " ##   ##  ##   ##     ##  ### \n"
+          " ##   ##  ##   ##     ##   ## \n"
+          " ##   ##  ##  ####    ##   ## \x1b[m\n";
     switch(pos)
     {
         case 0:
-            cout<<"●  로그아웃 \n"
-                  "\x1b[30m○  공고 목록 \n"
-                  "○  검색 > \x1b[m\n";
+            cout<<"●  로그아웃 \n";
+            ShowNotice(0);
+            cout<<"○  검색 > \x1b[m\n";
             break;
         case 1:
-            cout<<"\x1b[30m○  로그아웃 \x1b[m\n"
-                  "●  공고 목록 \n"
-                  "\x1b[30m○  검색 > \x1b[m\n";
+            cout<<"\x1b[30m○  로그아웃 \x1b[m\n";
+            ShowNotice(1);
+            cout<<"\x1b[30m○  검색 > \x1b[m\n";
             break;
         case 2:
-            cout<<"\x1b[30m○  로그아웃 \n"
-                  "○  공고 목록 \x1b[m\n"
-                  "●  검색 > \n";
+            cout<<"\x1b[30m○  로그아웃 \n";
+            ShowNotice(2);
+            cout<<"\x1b[m●  검색 > \n";
             break;
         default:
             break;
     }
     cout<<"(이동: 방향키 상/ 하) (선택: 엔터) \n";
 }
+//초기 페이지 메인 프로세스
 void InitPage::ProcessInit(void)
 {
     while(true)
