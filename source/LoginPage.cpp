@@ -11,7 +11,7 @@ SQLite db;
 std::string sqlTMP;
 
 //로그인 화면
-void LoginPage::LoginScreen(void)
+bool LoginPage::LoginScreen(void)
 {
     using std::cin;
     system("clear");
@@ -26,14 +26,14 @@ void LoginPage::LoginScreen(void)
         if(!id.compare("x")||!id.compare("X"))
         {
             cin.get();
-            return;
+            return false;
         }
         cout<<"PIN번호 > ";
         cin>>pin;
         if(!pin.compare("x")||!pin.compare("X"))
         {
             cin.get();
-            return;
+            return false;
         }
         //로그인 정보 확인해야함
         db.DataBaseOpen("DB_Hin.db");
@@ -63,6 +63,7 @@ void LoginPage::LoginScreen(void)
     cout<<"엔터를 눌러 계속)\n";
     cin.get();
     cin.get();
+    return true;
 }
 //회원가입 화면
 void LoginPage::JoinScreen(void)
@@ -293,8 +294,9 @@ bool LoginPage::ProcessLogin(void)
     {
     case 0: //로그인
         cout<<"로그인을 진행합니다. \n";
-        LoginScreen();
-        return false;
+        if(LoginScreen()) return false;
+        else return ProcessLogin();
+        // return false;
     case 1: //회원가입
         cout<<"회원가입을 진행합니다. \n";
         JoinScreen();

@@ -31,7 +31,9 @@ public:
     void DataBaseClose(void);
     //데이터베이스 쿼리 실행
     void DataBaseQuery(const char* sql,int(*callback)(void*,int,char**,char**)=0);
-    // 검색된 내용과 비교 -- 일치하면 0
+    //검색된 내용과 비교 -- 일치하면 0
     bool ProcessCMP(const char*,std::string);
+    //검색된 내용과 비교 -- 일치하는 행의 PK 번호 반환
+    std::vector<int> ProcessCMP_Return(const char*,std::string);
 };
 #endif

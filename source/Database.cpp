@@ -1,5 +1,43 @@
 #include "Database.h"
 
+//검색된 내용과 비교 -- 일치하는 행의 PK 번호 반환
+std::vector<int> SQLite::ProcessCMP_Return(const char* sql,std::string keyword)
+{
+    std::vector<int> pkList;
+    sqlite3_stmt* res;
+    int pkNum;
+    if(sqlite3_prepare_v2(db,sql,-1,&res,0)!=SQLITE_OK) //sql 쿼리 컴파일
+    {
+        std::cout<<"Failed to fetch data: "<<sqlite3_errmsg(db)<<std::endl;
+        DataBaseClose();
+        exit(1);
+    }
+    else //정상적으로 쿼리 실행 진행
+    {
+        while(sqlite3_step(res)==SQLITE_ROW)
+        {
+            pkNum=sqlite3_column_int(res,0);
+            for(int i=1;i<sqlite3_column_count(res);i++)
+            {   
+                std::string tmp;
+                tmp.append((char*)sqlite3_column_text(res,i));
+                if(tmp.find(keyword)!=std::string::npos)
+                {
+                    pkList.push_back(pkNum);
+                    break;
+                }
+                // std::cout<<sqlite3_column_text(res,i)<<" "<<keyword<<std::endl;
+                // if(keyword.find((const char*)sqlite3_column_text(res,i))!=std::string::npos) //일치하는것이 하나라도 있으면
+                // {
+                //     pkList.push_back(pkNum);
+                //     break;
+                // }
+            }
+        }
+        sqlite3_finalize(res); //컴파일된 쿼리 정리
+    }
+    return pkList;
+}
 // 검색된 내용과 비교
 bool SQLite::ProcessCMP(const char* sql,std::string input)
 {

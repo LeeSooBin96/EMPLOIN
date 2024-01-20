@@ -10,7 +10,7 @@ private:
     std::string phone;  //휴대폰번호
 public:
     //로그인 화면
-    void LoginScreen(void);
+    bool LoginScreen(void);
     //회원가입 화면
     void JoinScreen(void);
     //커서 위치에 따른 목록 출력
