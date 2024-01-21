@@ -101,14 +101,20 @@ void InitPage::ProcessInit(void)
             switch(input)
             {
                 case 65: //방향키 상
-                    if(pos!=0) pos--;
-                    system("clear");
-                    ListforPos(pos);
+                    if(pos!=0) 
+                    {
+                        pos--;
+                        system("clear");
+                        ListforPos(pos);
+                    }
                     break;
                 case 66: //방향키 하
-                    if(pos!=1+lnumMax) pos++;
-                    system("clear");
-                    ListforPos(pos);
+                    if(pos!=1+lnumMax) 
+                    {
+                        pos++;
+                        system("clear");
+                        ListforPos(pos);
+                    }
                     break;
                 case 10: //엔터
                     quit = true;
@@ -126,7 +132,7 @@ void InitPage::ProcessInit(void)
         {
             //선택된 공고 번호 전달해야함
             DetailPage detail;
-            detail.ProcessDetail();
+            detail.ProcessDetail(lnum[pos-1]);
         }
         else if(pos==lnumMax+1) //검색
         {

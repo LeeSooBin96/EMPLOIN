@@ -274,14 +274,20 @@ bool LoginPage::ProcessLogin(void)
         switch(input)
         {
             case 65: //방향키 상
-                if(pos!=0) pos--;
-                system("clear");
-                ListforPos(pos);
+                if(pos!=0)
+                {
+                    pos--;
+                    system("clear");
+                    ListforPos(pos);
+                }
                 break;
             case 66: //방향키 하
-                if(pos!=2) pos++;
-                system("clear");
-                ListforPos(pos);
+                if(pos!=2) 
+                {
+                    pos++;
+                    system("clear");
+                    ListforPos(pos);
+                }
                 break;
             case 10: //엔터
                 quit = true;

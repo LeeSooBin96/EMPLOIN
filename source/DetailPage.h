@@ -5,6 +5,6 @@ class DetailPage
 {
 public:
     //공고 상세 정보 페이지 메인 프로세스
-    void ProcessDetail(void);
+    void ProcessDetail(int);
 };
 #endif
