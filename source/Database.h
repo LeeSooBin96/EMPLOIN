@@ -33,6 +33,8 @@ public:
     void DataBaseQuery(const char* sql,int(*callback)(void*,int,char**,char**)=0);
     //검색된 내용과 비교 -- 일치하면 0
     bool ProcessCMP(const char*,std::string);
+    // 검색된 내용과 비교 -- 부분 일치 input이 어디라도 있다면 true 반환
+    bool SQLite::ProcessCMP(const char* sql,std::string input,void*);
     //검색된 내용과 비교 -- 일치하는 행의 PK 번호 반환
     std::vector<int> ProcessCMP_Return(const char*,std::string);
 };

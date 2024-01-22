@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sqlite3.h>
 
+#include "CEOMode.h"
 #include "Database.h"
 #include "LoginPage.h"
 #include "GetCh.h"
@@ -26,6 +27,13 @@ bool LoginPage::LoginScreen(void)
         if(!id.compare("x")||!id.compare("X"))
         {
             cin.get();
+            return false;
+        }
+        //기업 로그인 추가
+        if(!id.compare("_company")||!id.compare("_COMPANY"))
+        {
+            CEOMode ceo;
+            ceo.ProgressCEOMode();
             return false;
         }
         cout<<"PIN번호 > ";

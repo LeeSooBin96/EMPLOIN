@@ -20,7 +20,7 @@ private:
         {"경력무관",false,"SNULLC"},{"경력",false,"SOLDC"},{"신입",false,"SNEWC"},
         {"학력무관",false,"SEDU"},{"고졸이상",false,"SEDU"},{"대졸(2,3년제)이상",false,"SEDU"},{"대졸(4년제)이상",false,"SEDU"},
         {"서울",false,"SEOUL"},{"경기",false,"GYEONGGI"},{"대전",false,"DAEJEON"},{"인천",false,"INCHEON"},{"광주",false,"GWANGJU"},
-        {"C",false,"C"},{"C++",false,"C++"},{"C#",false,"C#"},{"Python",false,"PYTHON"},{"JAVA",false,"JAVA"}
+        {"C",false,"C"},{"C++",false,"CPP"},{"C#",false,"CSP"},{"Python",false,"PYTHON"},{"JAVA",false,"JAVA"}
     };
 public:
     //검색 페이지 메인 프로세스
@@ -37,5 +37,17 @@ public:
     void SelectCRR(void);
     //경력 조건 목록
     void ShowCRR(unsigned short);
+    //학력 조건 선택
+    void SelectEDU(void);
+    //학력 조건 목록
+    void ShowEDU(unsigned short);
+    //근무지 조건 선택
+    void SelectST(void);
+    //근무지 조건 목록
+    void ShowST(unsigned short);
+    // 요구스킬 조건 선택
+    void SelectSK(void);
+    // 요구스킬 조건 목록
+    void ShowSK(unsigned short);
 };
 #endif

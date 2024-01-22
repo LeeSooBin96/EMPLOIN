@@ -99,22 +99,29 @@ void SearchPage::ProcessSearch(void)
     while(true)
     {
         unsigned short pos=0;
+        unsigned short cnt=0;
         bool quit=false;
         int input;
         //해당하는 공고 목록 받기
-        sql="SELECT * FROM HIRE_TB WHERE ";
+        sql="SELECT * FROM HIRE_TB";
+        // SELECT H.HNUM_PK FROM HIRE_TB AS H INNER JOIN SEARCH_TB AS S ON H.HNUM_PK=S.HNUM_PK WHERE S.SOLDC = 'o';
         for(int i=0;i<CHNUM;i++)
         {
             if(ch[i].Cchk&&(i<3||i>6))
             {
-                sql.append("(HNUM_PK=(SELECT HNUM_PK FROM SEARCH_TB WHERE "+ch[i].colName+"='o')) OR");
+                if(cnt==0) sql.append(" AS H INNER JOIN SEARCH_TB AS S ON H.HNUM_PK=S.HNUM_PK WHERE ");
+                sql.append(" (S."+ch[i].colName+"='o') OR");
+                cnt++;
+                cout<<ch[i].colName<<std::endl;
             }
             else if(ch[i].Cchk)
             {
-                sql.append("(HNUM_PK=(SELECT HNUM_PK FROM SEARCH_TB WHERE SEDU="+std::to_string(i-3)+")) OR");
+                if(cnt==0) sql.append(" AS H INNER JOIN SEARCH_TB AS S ON H.HNUM_PK=S.HNUM_PK WHERE ");
+                sql.append(" (S.SEDU="+std::to_string(i-3)+") OR");
+                cnt++;
             }
         }
-        sql.pop_back();sql.pop_back(); //마지막 OR 빼기
+        if(cnt>0) {sql.pop_back();sql.pop_back();} //마지막 OR 빼기
         sql.append(";");
         hnumL=db.ProcessCMP_Return(sql.c_str(),keyword);
         ListforPos(pos);
@@ -209,13 +216,13 @@ void SearchPage::ProcessDetail(void)
                 SelectCRR();
                 break;
             case 1: //학력
-                cout<<"전체 무관 고졸이상 대졸(2,3년제)이상 대졸(4년제)이상 선택완료 \n";
+                SelectEDU();
                 break;
             case 2: //근무지
-                cout<<"전체 서울 경기 대전 인천 광주 선택완료 \n";
+                SelectST();
                 break;
             case 3: //요구스킬
-                cout<<"전체 C C++ C# Python JAVA 선택완료 \n";
+                SelectSK();
                 break;
             case 4: //검색
                 break;
@@ -264,25 +271,14 @@ void SearchPage::SelectCRR(void)
                 break;
         }
     }
-    switch(pos)
+    if(pos==0)
     {
-        case 0: //전체 경력 조건 활성화
-            for(int i=0;i<3;i++) ch[i].Cchk=true;
-            break;
-        case 1: //무관
-            if(ch[0].Cchk) ch[0].Cchk=false;
-            else ch[0].Cchk=true;
-            break;
-        case 2: //경력
-            if(ch[1].Cchk) ch[1].Cchk=false;
-            else ch[1].Cchk=true;
-            break;
-        case 3: //신입
-            if(ch[2].Cchk) ch[2].Cchk=false;
-            else ch[2].Cchk=true;
-            break;
-        default:
-            break;
+        for(int i=0;i<3;i++) ch[i].Cchk=true;
+    }
+    else if(pos<4)
+    {
+        if(ch[pos-1].Cchk) ch[pos-1].Cchk=false;
+        else ch[pos-1].Cchk=true;
     }
 }
 //경력 조건 목록
@@ -303,6 +299,222 @@ void SearchPage::ShowCRR(unsigned short pos)
             break;
         case 3:
             cout<<"전체 무관 경력 ▶ 신입 \n";
+            break;
+    }
+    cout<<"(이동: 방향키 좌/ 우) (선택: 엔터) \n";
+}//경력 조건 선택
+//학력 조건 선택
+void SearchPage::SelectEDU(void)
+{
+    unsigned short pos=0;
+    bool quit = false;
+    int input;
+
+    ShowEDU(pos);
+    while(!quit)
+    {
+        //키입력 방향키 좌(68),우(67)
+        input=getch();
+        switch(input)
+        {
+            case 68:
+                if(pos!=0) 
+                {
+                    pos--;
+                    ShowEDU(pos);
+                }
+                break;
+            case 67:
+                if(pos!=4) 
+                {
+                    pos++;
+                    ShowEDU(pos);
+                }
+                break;
+            case 10:
+                quit=true;
+                break;
+            default:
+                break;
+        }
+    }
+    if(pos==0)
+    {
+        for(int i=0;i<4;i++) ch[i+3].Cchk=true;
+    }
+    else if(pos<5)
+    {
+        if(ch[pos+2].Cchk) ch[pos+2].Cchk=false;
+        else ch[pos+2].Cchk=true;
+    }
+}
+//학력 조건 목록
+void SearchPage::ShowEDU(unsigned short pos)
+{
+    system("clear");
+    ShowCate(0);
+    switch(pos)
+    {
+        case 0:
+            cout<<"▶ 전체 무관 고졸이상 대졸(2,3년제)이상 대졸(4년제)이상 \n";
+            break;
+        case 1:
+            cout<<"전체 ▶ 무관 고졸이상 대졸(2,3년제)이상 대졸(4년제)이상 \n";
+            break;
+        case 2:
+            cout<<"전체 무관 ▶ 고졸이상 대졸(2,3년제)이상 대졸(4년제)이상 \n";
+            break;
+        case 3:
+            cout<<"전체 무관 고졸이상 ▶ 대졸(2,3년제)이상 대졸(4년제)이상 \n";
+            break;
+        case 4:
+            cout<<"전체 무관 고졸이상 대졸(2,3년제)이상 ▶ 대졸(4년제)이상 \n";
+            break;
+    }
+    cout<<"(이동: 방향키 좌/ 우) (선택: 엔터) \n";
+}
+//근무지 조건 선택
+void SearchPage::SelectST(void)
+{
+    unsigned short pos=0;
+    bool quit = false;
+    int input;
+
+    ShowST(pos);
+    while(!quit)
+    {
+        //키입력 방향키 좌(68),우(67)
+        input=getch();
+        switch(input)
+        {
+            case 68:
+                if(pos!=0) 
+                {
+                    pos--;
+                    ShowST(pos);
+                }
+                break;
+            case 67:
+                if(pos!=5) 
+                {
+                    pos++;
+                    ShowST(pos);
+                }
+                break;
+            case 10:
+                quit=true;
+                break;
+            default:
+                break;
+        }
+    }
+    if(pos==0)
+    {
+        for(int i=0;i<5;i++) ch[i+7].Cchk=true;
+    }
+    else if(pos<6)
+    {
+        if(ch[pos+6].Cchk) ch[pos+6].Cchk=false;
+        else ch[pos+6].Cchk=true;
+    }
+}
+//근무지 조건 목록
+void SearchPage::ShowST(unsigned short pos)
+{
+    system("clear");
+    ShowCate(0);
+    switch(pos)
+    {
+        case 0:
+            cout<<"▶ 전체 서울 경기 대전 인천 광주 \n";
+            break;
+        case 1:
+            cout<<"전체 ▶ 서울 경기 대전 인천 광주 \n";
+            break;
+        case 2:
+            cout<<"전체 서울 ▶ 경기 대전 인천 광주 \n";
+            break;
+        case 3:
+            cout<<"전체 서울 경기 ▶ 대전 인천 광주 \n";
+            break;
+        case 4:
+            cout<<"전체 서울 경기 대전 ▶ 인천 광주 \n";
+            break;
+        case 5:
+            cout<<"전체 서울 경기 대전 인천 ▶ 광주 \n";
+            break;
+    }
+    cout<<"(이동: 방향키 좌/ 우) (선택: 엔터) \n";
+}
+//요구스킬 조건 선택
+void SearchPage::SelectSK(void)
+{
+    unsigned short pos=0;
+    bool quit = false;
+    int input;
+
+    ShowSK(pos);
+    while(!quit)
+    {
+        //키입력 방향키 좌(68),우(67)
+        input=getch();
+        switch(input)
+        {
+            case 68:
+                if(pos!=0) 
+                {
+                    pos--;
+                    ShowSK(pos);
+                }
+                break;
+            case 67:
+                if(pos!=5) 
+                {
+                    pos++;
+                    ShowSK(pos);
+                }
+                break;
+            case 10:
+                quit=true;
+                break;
+            default:
+                break;
+        }
+    }
+    if(pos==0)
+    {
+        for(int i=0;i<5;i++) ch[i+12].Cchk=true;
+    }
+    else if(pos<6)
+    {
+        if(ch[pos+11].Cchk) ch[pos+11].Cchk=false;
+        else ch[pos+11].Cchk=true;
+    }
+}
+//요구스킬 조건 목록
+void SearchPage::ShowSK(unsigned short pos)
+{
+    system("clear");
+    ShowCate(0);
+    switch(pos)
+    {
+        case 0:
+            cout<<"▶ 전체 C C++ C# Python JAVA \n";
+            break;
+        case 1:
+            cout<<"전체 ▶ C C++ C# Python JAVA \n";
+            break;
+        case 2:
+            cout<<"전체 C ▶ C++ C# Python JAVA \n";
+            break;
+        case 3:
+            cout<<"전체 C C++ ▶ C# Python JAVA \n";
+            break;
+        case 4:
+            cout<<"전체 C C++ C# ▶ Python JAVA \n";
+            break;
+        case 5:
+            cout<<"전체 C C++ C# Python ▶ JAVA \n";
             break;
     }
     cout<<"(이동: 방향키 좌/ 우) (선택: 엔터) \n";

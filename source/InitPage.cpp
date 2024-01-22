@@ -66,28 +66,28 @@ void InitPage::ListforPos(unsigned short pos)
 void InitPage::ProcessInit(void)
 {
     srand(time(NULL));
+    //일단 다른거 생각안하고 공고 랜덤으로 3~5개 출력되도록 --2~3개로 수정
+    lnumMax = rand()%2+2; //목록 개수
+    lnum.clear();
+    unsigned short tmp;
+    bool dup;
+    for(int i=0;i<lnumMax;i++)
+    {
+        tmp=rand()%60+1;
+        for(int j=0;j<i;j++) //중복 검사
+        {   
+            dup=lnum[j]==tmp;
+            if(dup) //중복이면
+            {
+                tmp=rand()%60+1; j=-1;
+                continue;
+            }
+        }
+        lnum.push_back(tmp); //나중에 공고 개수 const로 뺄것
+        //중복 지원해야함
+    }
     while(true)
     {    
-        //일단 다른거 생각안하고 공고 랜덤으로 3~5개 출력되도록 --2~3개로 수정
-        lnumMax = rand()%2+2; //목록 개수
-        lnum.clear();
-        unsigned short tmp;
-        bool dup;
-        for(int i=0;i<lnumMax;i++)
-        {
-            tmp=rand()%60+1;
-            for(int j=0;j<i;j++) //중복 검사
-            {   
-                dup=lnum[j]==tmp;
-                if(dup) //중복이면
-                {
-                    tmp=rand()%60+1; j=-1;
-                    continue;
-                }
-            }
-            lnum.push_back(tmp); //나중에 공고 개수 const로 뺄것
-            //중복 지원해야함
-        }
         //구성: 공고 목록/ 검색 입력/ 로그아웃
         unsigned short pos=0;
         bool quit=false;
@@ -138,6 +138,25 @@ void InitPage::ProcessInit(void)
         {
             SearchPage search;
             search.ProcessSearch();
+            lnumMax = rand()%2+2; //목록 개수
+            lnum.clear();
+            unsigned short tmp;
+            bool dup;
+            for(int i=0;i<lnumMax;i++)
+            {
+                tmp=rand()%60+1;
+                for(int j=0;j<i;j++) //중복 검사
+                {   
+                    dup=lnum[j]==tmp;
+                    if(dup) //중복이면
+                    {
+                        tmp=rand()%60+1; j=-1;
+                        continue;
+                    }
+                }
+                lnum.push_back(tmp); //나중에 공고 개수 const로 뺄것
+                //중복 지원해야함
+            }
         }
     }
 }

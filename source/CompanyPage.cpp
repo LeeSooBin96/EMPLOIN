@@ -14,7 +14,7 @@ void CompanyPage::ProcessCompany(int hnum)
         "CSTATE AS '주소',CINC AS '매출액',CANN AS '평균연봉' FROM COMPANY_TB "
         "WHERE CNUM_PK=(SELECT CNUM FROM HIRE_TB WHERE HNUM_PK='"+std::to_string(hnum)+"');";
     db.DataBaseQuery(sql.c_str(),db.CallbackSelect);
-    std::cout<<"이전으로> \n";
+    std::cout<<"\n엔터를 입력하면 이전으로 돌아갑니다. \n";
     db.DataBaseClose();
     std::cin.get();
 }
